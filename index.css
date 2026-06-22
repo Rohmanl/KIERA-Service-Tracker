@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 20 49% 92%;
+    --foreground: 220 25% 15%;
+
+    --card: 20 55% 96%;
+    --card-foreground: 220 25% 15%;
+
+    --popover: 20 55% 96%;
+    --popover-foreground: 220 25% 15%;
+
+    --primary: 220 25% 15%;
+    --primary-foreground: 20 49% 94%;
+
+    --secondary: 20 35% 86%;
+    --secondary-foreground: 220 25% 15%;
+
+    --muted: 20 35% 86%;
+    --muted-foreground: 220 18% 28%;
+
+    --accent: 214 48% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 142 60% 38%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 20 25% 80%;
+    --input: 20 30% 84%;
+    --ring: 214 48% 53%;
+
+    --radius: 1rem;
+
+    --chart-1: 214 48% 53%;
+    --chart-2: 142 60% 38%;
+    --chart-3: 25 80% 55%;
+    --chart-4: 262 70% 55%;
+    --chart-5: 340 70% 55%;
+
+    --sidebar-background: 20 55% 96%;
+    --sidebar-foreground: 220 25% 15%;
+    --sidebar-primary: 214 48% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 20 35% 88%;
+    --sidebar-accent-foreground: 220 25% 15%;
+    --sidebar-border: 20 25% 80%;
+    --sidebar-ring: 214 48% 53%;
+
+    /* Custom Service Tracker tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(20 49% 92%) 0%, hsl(20 40% 86%) 100%);
+    --card-shadow: 0 4px 20px -4px hsl(220 25% 15% / 0.08);
+    --card-hover-shadow: 0 8px 30px -4px hsl(220 25% 15% / 0.14);
+    --glow-accent: 0 0 40px hsl(214 48% 53% / 0.3);
+  }
+
+  .dark {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 8%;
+
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 215 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 142 76% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 215 85% 60%;
+
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 215 85% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 14%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 215 85% 60%;
+
+    --hero-gradient: linear-gradient(135deg, hsl(0 0% 4%) 0%, hsl(0 0% 10%) 100%);
+    --card-shadow: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --card-hover-shadow: 0 8px 30px -4px hsl(0 0% 0% / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Jost', system-ui, sans-serif;
+    background-image:
+      radial-gradient(hsl(220 25% 15% / 0.06) 1px, transparent 1px),
+      radial-gradient(hsl(220 25% 15% / 0.04) 1px, transparent 1px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(hsl(0 0% 100% / 0.04) 1px, transparent 1px),
+      radial-gradient(hsl(0 0% 100% / 0.03) 1px, transparent 1px);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Jost', system-ui, sans-serif;
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Jost', system-ui, sans-serif;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(215 90% 40%) 100%);
+  }
+
+  .glass-effect {
+    @apply bg-card/80 backdrop-blur-xl;
+  }
+
+  .card-elevated {
+    box-shadow: var(--card-shadow);
+    @apply transition-shadow duration-300;
+  }
+
+  .card-elevated:hover {
+    box-shadow: var(--card-hover-shadow);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Leaflet custom div marker — keep background transparent so SVG pin shows cleanly */
+.leaflet-div-icon.lucide-map-pin,
+.lucide-map-pin {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Keep Leaflet below shadcn dialogs/sheets (Radix uses z-50) */
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 1 !important;
+}
+.leaflet-popup-pane {
+  z-index: 2 !important;
+}
