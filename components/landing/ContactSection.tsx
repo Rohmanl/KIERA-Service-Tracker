@@ -22,6 +22,11 @@ export function ContactSection() {
     // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
+    if (typeof pendo !== 'undefined') {
+      pendo.track("contact_form_submitted", {
+        message_length: formData.message.length,
+      });
+    }
     toast.success("Message sent!", {
       description: "We'll get back to you as soon as possible.",
     });

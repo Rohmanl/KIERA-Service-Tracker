@@ -274,6 +274,13 @@ export default function OrgEvents() {
     ]);
     const safeTitle = event.title.replace(/[^a-z0-9-_]+/gi, "_").slice(0, 60);
     downloadCsv(`signups_${safeTitle}_${event.event_date}.csv`, [header, ...rows]);
+    if (typeof pendo !== 'undefined') {
+      pendo.track("org_event_signups_exported", {
+        export_scope: "single_event",
+        event_count: 1,
+        signup_count: regs.length,
+      });
+    }
     toast.success("CSV exported");
   };
 
@@ -329,6 +336,13 @@ export default function OrgEvents() {
       return;
     }
     downloadCsv(`all_event_signups_${new Date().toISOString().slice(0, 10)}.csv`, [header, ...rows]);
+    if (typeof pendo !== 'undefined') {
+      pendo.track("org_event_signups_exported", {
+        export_scope: "all_events",
+        event_count: filteredEvents.length,
+        signup_count: rows.length,
+      });
+    }
     toast.success("CSV exported");
   };
 

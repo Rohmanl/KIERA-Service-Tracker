@@ -69,6 +69,15 @@ export function EditHoursDialog({
         .eq("id", volunteer.id);
 
       if (error) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("admin_hours_adjusted", {
+          volunteer_id: volunteer.id,
+          volunteer_name: volunteer.name || "",
+          old_hours: volunteer.total_hours,
+          new_hours: parsed,
+          reason: reason.trim().slice(0, 100),
+        });
+      }
       toast.success(`Updated ${volunteer.name || "volunteer"}'s hours to ${parsed}`);
       setReason("");
       onSaved();

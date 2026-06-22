@@ -183,6 +183,8 @@ function evaluateRule(ruleType: string, target: number, stats: Stats): { earned:
   return { earned, progress };
 }
 
+const trackedAchievementIds = new Set<string>();
+
 export function useAchievements(userId: string | undefined) {
   const [achievements, setAchievements] = useState<AchievementWithProgress[]>([]);
   const [earnedCount, setEarnedCount] = useState(0);
@@ -296,6 +298,19 @@ export function useAchievements(userId: string | undefined) {
               justEarned.push(r);
             }
           });
+          if (typeof pendo !== 'undefined') {
+            justEarned.forEach((a) => {
+              if (!trackedAchievementIds.has(a.id)) {
+                trackedAchievementIds.add(a.id);
+                pendo.track("achievement_earned", {
+                  achievement_code: a.code,
+                  achievement_title: a.title,
+                  achievement_category: a.category,
+                  total_earned_count: result.filter((r) => r.earned).length,
+                });
+              }
+            });
+          }
         }
       }
 

@@ -71,6 +71,13 @@ export default function GuestVerify() {
         _token: token,
       });
       if (rpcError) throw rpcError;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("guest_hours_verified", {
+          organization_name: submission?.organization || "",
+          hours: submission?.hours || 0,
+          volunteer_name: submission?.volunteer_name || "",
+        });
+      }
       toast.success("Hours verified — thank you!");
       await fetchDetails();
     } catch (err: any) {

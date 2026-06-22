@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -98,6 +98,30 @@ export default function Leaderboard() {
       avatar: (user.name || "?")[0].toUpperCase(),
       displayName: user.name || "Anonymous",
     }));
+
+  const filterTrackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initialRender = useRef(true);
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    if (filterTrackTimer.current) clearTimeout(filterTrackTimer.current);
+    filterTrackTimer.current = setTimeout(() => {
+      if (typeof pendo !== 'undefined') {
+        pendo.track("leaderboard_filtered", {
+          city_filter: cityFilter,
+          grade_filter: gradeFilter,
+          school_filter: schoolFilter,
+          time_filter: timeFilter,
+          results_count: filteredData.length,
+        });
+      }
+    }, 500);
+    return () => {
+      if (filterTrackTimer.current) clearTimeout(filterTrackTimer.current);
+    };
+  }, [cityFilter, gradeFilter, schoolFilter, timeFilter, filteredData.length]);
 
   const currentUserData = filteredData.find(u => u.isCurrentUser);
   const totalHours = users.reduce((sum, u) => sum + Number(u.total_hours || 0), 0);

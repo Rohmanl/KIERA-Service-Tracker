@@ -231,6 +231,12 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
     a.download = `${orgName.replace(/\s+/g, "_")}_verified_volunteers.csv`;
     a.click();
     URL.revokeObjectURL(url);
+    if (typeof pendo !== 'undefined') {
+      pendo.track("org_report_exported", {
+        volunteer_count: verifiedVolunteers.length,
+        organization_name: orgName,
+      });
+    }
     toast.success("Report exported!");
   };
 
@@ -362,6 +368,17 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
 
       if (error) throw error;
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track("event_created", {
+          event_title: parsed.data.title,
+          event_date: parsed.data.event_date,
+          location: parsed.data.location,
+          max_capacity: parsed.data.max_capacity,
+          has_image: !!imageUrl,
+          has_contact_info: !!form.contact_info.trim(),
+          has_description: !!parsed.data.description,
+        });
+      }
       toast.success("Event created successfully!");
       setForm({ title: "", description: "", event_date: "", event_time: "", location: "", max_capacity: 10, contact_info: "" });
       setImageFile(null);
@@ -381,6 +398,11 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
     try {
       const { error } = await supabase.from("events").delete().eq("id", eventId);
       if (error) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("event_deleted", {
+          event_id: eventId,
+        });
+      }
       toast.success("Event deleted");
       fetchEvents();
     } catch (error) {
@@ -457,6 +479,13 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
 
       if (error) throw error;
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track("event_updated", {
+          event_id: editingEvent.id,
+          event_title: parsed.data.title,
+          image_changed: !!editImageFile,
+        });
+      }
       toast.success("Event updated successfully!");
       setEditDialogOpen(false);
       setEditingEvent(null);
@@ -545,6 +574,13 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
         .eq("event_id", registrantsEvent.id)
         .eq("user_id", registrant.id);
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track("org_hours_verified", {
+          event_id: registrantsEvent.id,
+          volunteer_id: registrant.id,
+          verified_hours: registrant.claimed_hours,
+        });
+      }
       toast.success(`Verified ${registrant.name || "volunteer"}'s ${registrant.claimed_hours}h`);
       setRegistrants((prev) =>
         prev.map((r) =>
@@ -571,6 +607,12 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
       });
       if (error) throw error;
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track("org_hours_rejected", {
+          event_id: registrantsEvent.id,
+          volunteer_id: registrant.id,
+        });
+      }
       toast.success(`Rejected ${registrant.name || "volunteer"}'s claim. They can resubmit.`);
       setRegistrants((prev) =>
         prev.map((r) =>
@@ -595,6 +637,11 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
         .update({ status: "approved", reviewed_at: new Date().toISOString() } as any)
         .eq("id", hourId);
       if (error) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("org_manual_hours_approved", {
+          hour_entry_id: hourId,
+        });
+      }
       toast.success("Hours approved!");
       fetchPendingHours();
     } catch (error: any) {
@@ -612,6 +659,11 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
         .update({ status: "denied", reviewed_at: new Date().toISOString() } as any)
         .eq("id", hourId);
       if (error) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("org_manual_hours_denied", {
+          hour_entry_id: hourId,
+        });
+      }
       toast.success("Hours denied.");
       fetchPendingHours();
     } catch (error: any) {
@@ -644,6 +696,13 @@ export default function OrgDashboard({ user, orgName }: OrgDashboardProps) {
         .eq("event_id", registrantsEvent.id)
         .eq("user_id", registrant.id);
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track("org_attendance_marked", {
+          event_id: registrantsEvent.id,
+          volunteer_id: registrant.id,
+          hours: hours,
+        });
+      }
       toast.success(`Marked ${registrant.name || "volunteer"} as attended (${hours}h)`);
       setRegistrants((prev) => prev.map((r) => r.id === registrant.id ? { ...r, attended: true, attended_hours: hours, verification_status: "verified" } : r));
     } catch (error: any) {

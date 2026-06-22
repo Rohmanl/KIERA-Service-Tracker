@@ -62,6 +62,20 @@ export function ManageOrganizations() {
         .eq("id", orgId) as any;
 
       if (error) throw error;
+      const org = organizations.find(o => o.id === orgId);
+      if (typeof pendo !== 'undefined') {
+        if (newStatus === "approved") {
+          pendo.track("admin_organization_approved", {
+            organization_id: orgId,
+            organization_name: org?.org_name || "",
+          });
+        } else {
+          pendo.track("admin_organization_rejected", {
+            organization_id: orgId,
+            organization_name: org?.org_name || "",
+          });
+        }
+      }
       toast.success(`Organization ${newStatus === "approved" ? "approved" : "rejected"} successfully`);
       fetchOrganizations();
     } catch (error) {

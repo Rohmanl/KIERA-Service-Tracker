@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, CalendarDays, MapPin, Users, Clock, Building2, ImageIcon, CheckCircle2, Phone, List, Map as MapIcon } from "lucide-react";
@@ -198,6 +198,14 @@ export default function Explore() {
     if (error) {
       toast.error(error.message.includes("duplicate") ? "You're already signed up" : "Failed to sign up");
     } else {
+      if (typeof pendo !== 'undefined') {
+        pendo.track("event_signup_completed", {
+          event_id: signupNoteEvent.id,
+          event_title: signupNoteEvent.title,
+          organization_name: signupNoteEvent.org_name,
+          has_note: !!note,
+        });
+      }
       toast.success("You're signed up!");
       setSignupNoteEvent(null);
       setSignupNote("");
@@ -218,6 +226,11 @@ export default function Explore() {
     if (error) {
       toast.error("Failed to cancel signup");
     } else {
+      if (typeof pendo !== 'undefined') {
+        pendo.track("event_signup_cancelled", {
+          event_id: eventId,
+        });
+      }
       toast.success("Signup cancelled");
       await fetchEvents();
     }
@@ -243,6 +256,12 @@ export default function Explore() {
         .eq("event_id", eventId)
         .eq("user_id", user.id);
       if (error) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("event_hours_claimed", {
+          event_id: eventId,
+          claimed_hours: hours,
+        });
+      }
       toast.success("Hours submitted for verification!");
       setClaimHoursInput("");
       await fetchEvents();
@@ -267,6 +286,25 @@ export default function Explore() {
       false
     );
   });
+
+  const searchTrackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (!q) return;
+    if (searchTrackTimer.current) clearTimeout(searchTrackTimer.current);
+    searchTrackTimer.current = setTimeout(() => {
+      if (typeof pendo !== 'undefined') {
+        pendo.track("event_search_performed", {
+          search_query: q.slice(0, 100),
+          results_count: filtered.length,
+          total_events: events.length,
+        });
+      }
+    }, 800);
+    return () => {
+      if (searchTrackTimer.current) clearTimeout(searchTrackTimer.current);
+    };
+  }, [searchQuery, filtered.length, events.length]);
 
   if (authLoading || isRoleLoading) {
     return (

@@ -272,6 +272,18 @@ export function HourSubmissionForm({ userId, onSuccess }: HourSubmissionFormProp
 
       if (error) throw error;
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track("volunteer_hours_submitted", {
+          hours: data.hours,
+          organization_mode: data.organizationMode,
+          organization_name: orgName,
+          has_proof_file: !!proofFile,
+          proof_file_type: proofFile?.type || "",
+          has_verification_email: !!verificationToken,
+          activity: data.activity,
+        });
+      }
+
       // Send guest verification email via edge function
       if (verificationToken) {
         // Generate a signed URL for the proof file so the supervisor can view it
@@ -308,6 +320,13 @@ export function HourSubmissionForm({ userId, onSuccess }: HourSubmissionFormProp
             variant: "destructive",
           });
         } else {
+          if (typeof pendo !== 'undefined') {
+            pendo.track("verification_email_sent", {
+              organization_name: orgName,
+              hours: data.hours,
+              activity: data.activity,
+            });
+          }
           toast({
             title: "Verification email sent to supervisor!",
             description: `We emailed ${data.orgContactEmail} to verify your hours.`,

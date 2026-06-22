@@ -116,6 +116,9 @@ export default function Auth() {
           return;
         }
         toast.success("Welcome back!");
+        if (typeof pendo !== 'undefined') {
+          pendo.track("user_login", {});
+        }
         navigate("/dashboard");
       } else if (signupType === "organization") {
         const redirectUrl = `${window.location.origin}/`;
@@ -140,6 +143,11 @@ export default function Auth() {
           return;
         }
 
+        if (typeof pendo !== 'undefined') {
+          pendo.track("organization_signup_completed", {
+            signup_type: "organization",
+          });
+        }
         setShowEmailSent(true);
       } else {
         const redirectUrl = `${window.location.origin}/`;
@@ -162,6 +170,13 @@ export default function Auth() {
           return;
         }
 
+        if (typeof pendo !== 'undefined') {
+          pendo.track("volunteer_signup_completed", {
+            signup_type: "volunteer",
+            school: formData.school,
+            grade: formData.grade,
+          });
+        }
         setShowEmailSent(true);
       }
     } catch (error) {
@@ -242,6 +257,9 @@ export default function Auth() {
                       });
                       if (error) { toast.error(error.message); return; }
                       toast.success("Password reset link sent! Check your email.");
+                      if (typeof pendo !== 'undefined') {
+                        pendo.track("password_reset_requested", {});
+                      }
                       setShowForgotPassword(false);
                     } catch { toast.error("Something went wrong."); }
                     finally { setForgotLoading(false); }

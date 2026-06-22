@@ -186,6 +186,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
 
   const handleApprove = async (hourId: string) => {
     try {
+      const entry = pendingHours.find(h => h.id === hourId);
       const { error } = await supabase
         .from("volunteer_hours")
         .update({
@@ -196,6 +197,14 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         .eq("id", hourId);
 
       if (error) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("admin_hours_approved", {
+          hour_entry_id: hourId,
+          volunteer_id: entry?.user_id || "",
+          hours: entry?.hours || 0,
+          organization: entry?.organization || "",
+        });
+      }
       toast.success("Hours approved successfully");
       fetchDashboardData();
     } catch (error) {
@@ -206,6 +215,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
 
   const handleReject = async (hourId: string) => {
     try {
+      const entry = pendingHours.find(h => h.id === hourId);
       const { error } = await supabase
         .from("volunteer_hours")
         .update({
@@ -216,6 +226,14 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         .eq("id", hourId);
 
       if (error) throw error;
+      if (typeof pendo !== 'undefined') {
+        pendo.track("admin_hours_rejected", {
+          hour_entry_id: hourId,
+          volunteer_id: entry?.user_id || "",
+          hours: entry?.hours || 0,
+          organization: entry?.organization || "",
+        });
+      }
       toast.success("Hours rejected");
       fetchDashboardData();
     } catch (error) {

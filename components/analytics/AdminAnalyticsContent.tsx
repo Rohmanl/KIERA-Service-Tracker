@@ -199,6 +199,11 @@ export function AdminAnalyticsContent() {
       a.download = `platform-data-${format(new Date(), "yyyy-MM-dd")}.csv`;
       a.click();
       URL.revokeObjectURL(url);
+      if (typeof pendo !== 'undefined') {
+        pendo.track("admin_platform_data_exported", {
+          record_count: allHours.length,
+        });
+      }
       toast.success("CSV exported successfully");
     } catch {
       toast.error("Failed to export data");

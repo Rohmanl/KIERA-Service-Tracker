@@ -141,6 +141,13 @@ export default function Profile() {
         console.error("Profile save error:", profileError || orgError);
         toast.error("Failed to update profile");
       } else {
+        if (typeof pendo !== 'undefined') {
+          pendo.track("organization_profile_updated", {
+            organization_name: orgData.orgName,
+            has_address: !!orgData.address,
+            has_verification_info: !!orgData.verificationInfo,
+          });
+        }
         toast.success("Profile updated!");
       }
     } else {
@@ -154,6 +161,15 @@ export default function Profile() {
         console.error("Profile save error:", error instanceof Error ? error.message : "Unknown error");
         toast.error(getSafeErrorMessage(error));
       } else {
+        if (typeof pendo !== 'undefined') {
+          pendo.track("volunteer_profile_updated", {
+            has_school: !!formData.school,
+            has_grade: !!formData.grade,
+            has_city: !!formData.city,
+            yearly_goal: yearlyGoalNum,
+            show_in_ranking: showInRanking,
+          });
+        }
         toast.success("Profile updated!");
       }
     }
@@ -294,6 +310,9 @@ function ChangePasswordCard() {
     if (error) {
       toast.error(getSafeErrorMessage(error));
     } else {
+      if (typeof pendo !== 'undefined') {
+        pendo.track("password_changed", {});
+      }
       toast.success("Password updated successfully");
       setNewPassword("");
       setConfirmPassword("");

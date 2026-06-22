@@ -59,6 +59,9 @@ export default function ResetPassword() {
       }
       setIsSuccess(true);
       toast.success("Password updated successfully!");
+      if (typeof pendo !== 'undefined') {
+        pendo.track("password_reset_completed", {});
+      }
       setTimeout(() => navigate("/dashboard"), 2000);
     } catch {
       toast.error("Something went wrong. Please try again.");
