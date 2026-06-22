@@ -3,6 +3,12 @@ import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import "./index.css";
 
+pendo.initialize({
+  visitor: {
+    id: ''
+  }
+});
+
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <App />
