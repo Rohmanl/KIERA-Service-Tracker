@@ -1,0 +1,13 @@
+# ACL Volunteer Tracker
+
+> A platform for students and volunteer organizations to log, verify, and showcase community service hours. Includes analytics, achievements, leaderboards, and event discovery.
+
+## Pages
+
+- [Home](/): Overview of the volunteer tracker.
+- [Features](/features): Hour logging, verification, achievements, and analytics.
+- [About](/about): What the product does and who it's for.
+- [About Us](/about-us): The team behind the project.
+- [Contact](/contact): Get in touch with the team.
+- [Help Center](/help): Common questions and troubleshooting.
+- [Sign In](/auth): Account access for students, organizations, and admins.

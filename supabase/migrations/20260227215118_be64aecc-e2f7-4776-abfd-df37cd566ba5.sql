@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN yearly_goal numeric NOT NULL DEFAULT 150;

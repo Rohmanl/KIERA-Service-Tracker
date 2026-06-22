@@ -1,0 +1,1 @@
+ALTER TABLE public.organizations ADD COLUMN address text, ADD COLUMN verification_info text;

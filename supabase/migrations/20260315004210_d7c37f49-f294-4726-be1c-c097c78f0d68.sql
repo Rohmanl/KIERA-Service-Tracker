@@ -1,0 +1,1 @@
+ALTER TABLE public.events ADD COLUMN contact_info text DEFAULT NULL;
