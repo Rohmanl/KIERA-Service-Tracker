@@ -51,6 +51,9 @@ export async function performLogout(redirectTo: string = "/"): Promise<void> {
     console.error("storage purge failed:", err);
   }
 
-  // 4. Hard redirect to reset the entire React tree and in-memory state.
+  // 4. Clear Pendo session so the next user is not tracked under the previous identity.
+  pendo.clearSession();
+
+  // 5. Hard redirect to reset the entire React tree and in-memory state.
   window.location.replace(redirectTo);
 }
